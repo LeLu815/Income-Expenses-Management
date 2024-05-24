@@ -13,16 +13,15 @@ const StOuterContainer = styled.div`
   min-width: 360px;
   box-sizing: border-box;
   margin: 30px auto;
+  /* margin: 0 auto; */
 `;
 
 function Layout({ children }) {
   return (
     <StBackgroundLayout>
-      <StOuterContainer>
-        <Header />
-        {children}
-        <Footer />
-      </StOuterContainer>
+      <Header />
+      <StOuterContainer>{children}</StOuterContainer>
+      <Footer />
     </StBackgroundLayout>
   );
 }
