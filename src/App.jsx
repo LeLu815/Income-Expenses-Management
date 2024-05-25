@@ -4,7 +4,7 @@ import { RouterProvider } from "react-router-dom";
 import { LogContext, SetLogContext } from "./context/LogContext";
 import router from "./routes/routes";
 import GlobalStyles from "./styles/globalStyles";
-import { setDataToLocal } from "./util/storageFunc";
+import { setDataToSession } from "./util/storageFunc";
 
 import "./App.css";
 
@@ -12,7 +12,7 @@ function App() {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
     const newSelectedMonth = new Date().getMonth();
-    setDataToLocal("selectedMonth", newSelectedMonth);
+    setDataToSession("selectedMonth", newSelectedMonth);
   }, []);
   return (
     <>

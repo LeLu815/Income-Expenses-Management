@@ -26,6 +26,7 @@ const resolver = (formValues) => {
   return success ? {} : error.flatten().fieldErrors;
 };
 const inputDefaultDate = new Date();
+
 function SubmitForm({ isInHome, selectedMonth }) {
   const defaultDate = `${inputDefaultDate.getFullYear()}-${
     parseInt(selectedMonth) + 1 <= 9
@@ -91,7 +92,7 @@ function SubmitForm({ isInHome, selectedMonth }) {
           <StMessageSpan>{message[FORM_DESCRIPTION]}</StMessageSpan>
         </StInputSection>
 
-        <StButton type="submit">저장</StButton>
+        <StButton type="submit">수정</StButton>
       </StFormHome>
     </StCardStyleDiv>
   );
