@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import styled from "styled-components";
 
 import {
@@ -26,13 +26,11 @@ const resolver = (formValues) => {
 };
 const inputDefaultDate = new Date();
 function SubmitForm({ isInHome, selectedMonth }) {
-  const [defaultDate, setDefaultDate] = useState(
-    `${inputDefaultDate.getFullYear()}-${
-      parseInt(selectedMonth) + 1 <= 9
-        ? "0" + (parseInt(selectedMonth) + 1)
-        : parseInt(selectedMonth) + 1
-    }-01`
-  );
+  const defaultDate = `${inputDefaultDate.getFullYear()}-${
+    parseInt(selectedMonth) + 1 <= 9
+      ? "0" + (parseInt(selectedMonth) + 1)
+      : parseInt(selectedMonth) + 1
+  }-01`;
   const postSetterContext = useContext(SetLogContext);
   const addNewPost = (newPostObj) => {
     postSetterContext((prevList) => [...prevList, { ...newPostObj }]);
@@ -50,6 +48,7 @@ function SubmitForm({ isInHome, selectedMonth }) {
         <StInputSection>
           <StLabel htmlFor={FORM_DATE}>날짜</StLabel>
           <StInput
+            key={selectedMonth}
             type="date"
             name={FORM_DATE}
             id={FORM_DATE}
