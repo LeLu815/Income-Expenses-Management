@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import styled from "styled-components";
+import { v4 as uuidv4 } from "uuid";
 
 import {
   FORM_CATEGORY,
@@ -33,7 +34,10 @@ function SubmitForm({ isInHome, selectedMonth }) {
   }-01`;
   const postSetterContext = useContext(SetLogContext);
   const addNewPost = (newPostObj) => {
-    postSetterContext((prevList) => [...prevList, { ...newPostObj }]);
+    postSetterContext((prevList) => [
+      ...prevList,
+      { ...newPostObj, id: uuidv4() },
+    ]);
   };
   // form의 각각의 input에 대한 state를 만들지 않음으로써 불필요한 랜더링을 줄일 수 있다.
   // 각 인풋에 대한 유효성을 각각 별도로 유지관리하는 것이 아니라 resolver 를 넘겨줌으로써 다양한 인풋 형식에 대해서 유연하게 대응할 수 있다.
