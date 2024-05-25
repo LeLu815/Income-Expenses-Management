@@ -11,7 +11,7 @@ function Home() {
   const [selectedMonth, setSelectedMonth] = useState(getDataToLocal(MONTH_KEY));
   return (
     <>
-      <SubmitForm selectedMonth={selectedMonth} />
+      <SubmitForm isInHome={true} selectedMonth={selectedMonth} />
       <SelectMonth
         selectedMonth={selectedMonth}
         setSelectedMonth={setSelectedMonth}
