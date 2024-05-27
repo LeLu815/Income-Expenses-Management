@@ -1,15 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { Provider } from "react-redux";
 import { RouterProvider } from "react-router-dom";
 
-import { LogContext, SetLogContext } from "./context/LogContext";
 import router from "./routes/routes";
 import GlobalStyles from "./styles/globalStyles";
 import { setDataToSession } from "./util/storageFunc";
 
+import store from "./redux/store";
+
 import "./App.css";
 
 function App() {
-  const [posts, setPosts] = useState([]);
   useEffect(() => {
     const newSelectedMonth = new Date().getMonth();
     setDataToSession("selectedMonth", newSelectedMonth);
@@ -17,11 +18,9 @@ function App() {
   return (
     <>
       <GlobalStyles />
-      <LogContext.Provider value={posts}>
-        <SetLogContext.Provider value={setPosts}>
-          <RouterProvider router={router} />
-        </SetLogContext.Provider>
-      </LogContext.Provider>
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
     </>
   );
 }

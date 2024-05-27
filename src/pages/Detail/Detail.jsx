@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 
@@ -10,8 +10,11 @@ import {
   FORM_PRICE,
   POST_ID,
 } from "../../constant/constant";
-import { LogContext, SetLogContext } from "../../context/LogContext";
 import useFormCustom from "../../hooks/useFormCustom";
+import {
+  delete_action,
+  update_action,
+} from "../../redux/reducers/post.reducer";
 import { StCardStyleDiv } from "../../styles/cardLayout";
 import {
   StButton,
@@ -29,19 +32,18 @@ const resolver = (formData) => {
 };
 
 function Detail() {
+  const dispatch = useDispatch();
   const params = useParams();
   const paramsId = params[POST_ID];
-  const posts = useContext(LogContext);
-  const onChagePost = useContext(SetLogContext);
+  const posts = useSelector((state) => state.post);
   const setPost = (changedPost) => {
-    onChagePost((prevPosts) =>
-      prevPosts.map((post) => {
-        if (post.id === paramsId) {
-          return { ...post, ...changedPost };
-        }
-        return post;
-      })
-    );
+    dispatch({
+      type: update_action,
+      payload: {
+        paramsId: paramsId,
+        changedPost: changedPost,
+      },
+    });
   };
   const { handleSubmit, formRef, message } = useFormCustom({
     resolver,
@@ -65,9 +67,10 @@ function Detail() {
     if (!confirm("정말로 이 지출 항목을 삭제하시겠습니까?")) {
       return;
     }
-    onChagePost((prevPosts) =>
-      prevPosts.filter((post) => post.id !== paramsId)
-    );
+    dispatch({
+      type: delete_action,
+      payload: paramsId,
+    });
     navigate("/");
   };
 
