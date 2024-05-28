@@ -74,7 +74,7 @@ function Detail() {
   return (
     <StCardStyleDiv>
       <StFormHome $isInHome={false} ref={formRef} onSubmit={handleSubmit}>
-        <StInputSection>
+        <StDetailInputSection>
           <StLabel htmlFor={FORM_DATE}>날짜</StLabel>
           <StInput
             type="date"
@@ -85,9 +85,9 @@ function Detail() {
             required
           />
           <StMessageSpan>{message[FORM_DATE]}</StMessageSpan>
-        </StInputSection>
+        </StDetailInputSection>
 
-        <StInputSection>
+        <StDetailInputSection>
           <StLabel htmlFor={FORM_CATEGORY}>항목</StLabel>
           <StInput
             type="text"
@@ -97,9 +97,9 @@ function Detail() {
             required
           />
           <StMessageSpan>{message[FORM_CATEGORY]}</StMessageSpan>
-        </StInputSection>
+        </StDetailInputSection>
 
-        <StInputSection>
+        <StDetailInputSection>
           <StLabel htmlFor={FORM_PRICE}>금액</StLabel>
           <StInput
             type="number"
@@ -109,9 +109,9 @@ function Detail() {
             required
           />
           <StMessageSpan>{message[FORM_PRICE]}</StMessageSpan>
-        </StInputSection>
+        </StDetailInputSection>
 
-        <StInputSection>
+        <StDetailInputSection>
           <StLabel htmlFor={FORM_DESCRIPTION}>내용</StLabel>
           <StInput
             type="text"
@@ -121,20 +121,22 @@ function Detail() {
             required
           />
           <StMessageSpan>{message[FORM_DESCRIPTION]}</StMessageSpan>
-        </StInputSection>
+        </StDetailInputSection>
 
-        <StButton type="submit">저장</StButton>
-        <StButton type="button" onClick={handleDelete}>
-          삭제
-        </StButton>
-        <StButton
-          type="button"
-          onClick={() => {
-            navigate(-1);
-          }}
-        >
-          뒤로가기
-        </StButton>
+        <StButtonContainer>
+          <StButton type="submit">저장</StButton>
+          <StDetailDelete type="button" onClick={handleDelete}>
+            삭제
+          </StDetailDelete>
+          <StDetailGoPrevBtn
+            type="button"
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            뒤로가기
+          </StDetailGoPrevBtn>
+        </StButtonContainer>
       </StFormHome>
     </StCardStyleDiv>
   );
@@ -144,4 +146,17 @@ export default Detail;
 
 const StFormHome = styled(StForm)`
   flex-direction: ${(props) => (props.$isInHome ? "row" : "column")};
+`;
+const StDetailInputSection = styled(StInputSection)`
+  margin-bottom: 10px;
+`;
+const StButtonContainer = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+const StDetailDelete = styled(StButton)`
+  background-color: rgb(255, 77, 77);
+`;
+const StDetailGoPrevBtn = styled(StButton)`
+  background-color: rgb(108, 117, 125);
 `;
