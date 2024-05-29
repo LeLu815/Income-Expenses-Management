@@ -102,4 +102,8 @@ export default SubmitForm;
 
 const StFormHome = styled(StForm)`
   flex-direction: ${(props) => (props.$isInHome ? "row" : "column")};
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-end;
 `;
