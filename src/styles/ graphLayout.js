@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { graphPercent } from "../util/calculation";
 
 export const StGraphContainer = styled.div`
   display: flex;
@@ -13,10 +12,10 @@ export const StGraphContainer = styled.div`
 export const StGraphPortion = styled.div`
   height: 100%;
   background-color: ${(props) => props.$colorChip};
-  ${(props) => {
-    const widthValue = graphPercent(props.$percent.total, props.$percent.price);
-    return `width : ${widthValue}%;`;
-  }}
+  width: ${(props) => {
+    console.log("percent :", props.$percent);
+    return `${props.$percent}%`;
+  }};
   transition: width 0.2s ease-in-out 0s;
 `;
 export const colorChipList = [

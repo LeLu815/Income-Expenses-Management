@@ -14,24 +14,23 @@ function MonthGragh({
   selectedMonthPostObj,
   totalAmount,
 }) {
+  console.log("selectedMonthPostObj :", selectedMonthPostObj, totalAmount);
   return (
     <StCardStyleDiv>
       <StTitle>{`${
         parseInt(selectedMonth) + 1
       }월 총 지출 : ${totalAmount}`}</StTitle>
       <StGraphContainer>
-        {Object.keys(selectedMonthPostObj).map((key) => (
+        {Object.keys(selectedMonthPostObj).map((key, index) => (
           <StGraphPortion
             key={key}
-            $percent={graphPercent(
-              totalAmount,
-              selectedMonthPostObj[key].price
-            )}
+            $colorChip={colorChipList[index]}
+            $percent={graphPercent(totalAmount, selectedMonthPostObj[key])}
           />
         ))}
       </StGraphContainer>
       <StLegendContainer>
-        {Object.keys(selectedMonthPostObj).map((key) => (
+        {Object.keys(selectedMonthPostObj).map((key, index) => (
           <StLegend key={key}>
             <StColorChip $colorChip={colorChipList[index]} />
             <span>{`${key}:`}</span>
