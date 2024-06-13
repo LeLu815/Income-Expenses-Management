@@ -12,17 +12,21 @@ class AuthApi {
     });
   }
 
-  async login(id, password) {
+  async login({ id, password }) {
     const response = await this.#client.post("/login", {
-      data: { id, password },
+      id,
+      password,
     });
     this.#accessToken = response.accessToken;
     return response;
   }
 
-  async join(id, password, nickname) {
+  async join({ id, password, nickname }) {
+    console.log("join api :", id, password, nickname);
     const response = await this.#client.post("/register", {
-      data: { id, password, nickname },
+      id,
+      password,
+      nickname,
     });
     return response;
   }
@@ -36,16 +40,19 @@ class AuthApi {
     return response;
   }
 
-  async patchUserInfo(avatar, nickname) {
-    const response = await this.#client.get("/profile", {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      data: {
+  async patchUserInfo({ avatar, nickname }) {
+    const response = await this.#client.get(
+      "/profile",
+      {
         avatar,
         nickname,
       },
-    });
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
     return response;
   }
 }
