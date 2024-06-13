@@ -1,8 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
+
 import api from "../../api/api";
 import useFormCustom from "../../hooks/useFormCustom";
 import { joinSchema, loginSchema } from "../../util/authSchema";
+import { setDataToSession } from "../../util/storageFunc";
 
 function AuthSubmitForm({ type }) {
   const navigete = useNavigate();
@@ -15,7 +17,8 @@ function AuthSubmitForm({ type }) {
         return api.auth.join(variables);
       }
     },
-    onSuccess: () => {
+    onSuccess: (variables) => {
+      setDataToSession("accessToken", variables.data.accessToken);
       alert("성공했어!");
       if (type === "join") {
         return navigete("/login");
