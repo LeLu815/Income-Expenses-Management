@@ -20,6 +20,10 @@ export const joinSchema = z
       .string()
       .min(6, { message: "비밀번호를 6자 이상 입력해주세요." })
       .max(20, { message: "비밀번호는 20자 이하로 입력해주세요." }),
+    nickname: z
+      .string()
+      .min(2, { message: "2자 이상 작성해주세요." })
+      .max(10, { message: "10자 이하로 작성해주세요. " }),
   })
   .refine((data) => data.password === data.password2, {
     path: ["password2"],
@@ -38,4 +42,12 @@ export const loginSchema = z.object({
       message: "영문, 숫자, 특수문자 중 두가지 이상 포함해야 합니다.",
     })
     .max(20, { message: "비밀번호는 20자 이하로 입력해주세요." }),
+});
+
+export const userDataSchema = z.object({
+  avatar: z.string(),
+  nickname: z
+    .string()
+    .min(2, { message: "2자 이상 작성해주세요." })
+    .max(10, { message: "10자 이하로 작성해주세요. " }),
 });

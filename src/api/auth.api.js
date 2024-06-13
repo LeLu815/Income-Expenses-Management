@@ -11,18 +11,27 @@ class AuthApi {
       return config;
     });
   }
+  updateToken(token) {
+    this.#accessToken = token;
+    return null;
+  }
 
   async login({ id, password }) {
     const response = await this.#client.post("/login", {
       id,
       password,
     });
-    this.#accessToken = response.accessToken;
+    this.#accessToken = response.data.accessToken;
+
     return response;
   }
 
+  logout() {
+    this.#accessToken = null;
+    sessionStorage.clear();
+  }
+
   async join({ id, password, nickname }) {
-    console.log("join api :", id, password, nickname);
     const response = await this.#client.post("/register", {
       id,
       password,
@@ -41,7 +50,7 @@ class AuthApi {
   }
 
   async patchUserInfo({ avatar, nickname }) {
-    const response = await this.#client.get(
+    const response = await this.#client.patch(
       "/profile",
       {
         avatar,

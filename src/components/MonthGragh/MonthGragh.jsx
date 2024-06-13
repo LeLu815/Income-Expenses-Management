@@ -14,7 +14,6 @@ function MonthGragh({
   selectedMonthPostObj,
   totalAmount,
 }) {
-  console.log("selectedMonthPostObj :", selectedMonthPostObj, totalAmount);
   return (
     <StCardStyleDiv>
       <StTitle>{`${

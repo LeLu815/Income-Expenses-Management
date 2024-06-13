@@ -1,13 +1,15 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 
 import api from "../../api/api";
 import useFormCustom from "../../hooks/useFormCustom";
 import { joinSchema, loginSchema } from "../../util/authSchema";
+import { ACCESS_TOKEN, QUERY_USER } from "../../util/constant";
 import { setDataToSession } from "../../util/storageFunc";
 
-function AuthSubmitForm({ type }) {
-  const navigete = useNavigate();
+function AuthSubmitForm({ type, names }) {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const { isPending, mutate } = useMutation({
     mutationFn: (variables) => {
       if (type === "login") {
@@ -18,14 +20,12 @@ function AuthSubmitForm({ type }) {
       }
     },
     onSuccess: (variables) => {
-      setDataToSession("accessToken", variables.data.accessToken);
+      setDataToSession(ACCESS_TOKEN, variables.data.accessToken);
       alert("성공했어!");
-      if (type === "join") {
-        return navigete("/login");
-      }
       if (type === "login") {
-        return navigete("/");
+        queryClient.invalidateQueries([QUERY_USER]);
       }
+      return navigate("/");
     },
     onError: () => {
       alert("실패했어");
