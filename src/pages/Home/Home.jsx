@@ -54,7 +54,7 @@ function Home() {
       setSelectedMonthPostObj(selectedMonthPostObj);
       setTotalAmount(totalAmount);
     }
-  }, [data]);
+  }, [data, selectedMonth]);
 
   return (
     <>

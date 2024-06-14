@@ -9,6 +9,11 @@ import {
   FORM_DESCRIPTION,
   FORM_PRICE,
 } from "../../constant/constant";
+import {
+  TOAST_TYPE_ERROR,
+  TOAST_TYPE_SUCCESS,
+  useCustomToast,
+} from "../../context/toast.context";
 import useFormCustom from "../../hooks/useFormCustom";
 import { StCardStyleDiv } from "../../styles/cardLayout";
 import {
@@ -28,16 +33,23 @@ const resolver = (formValues) => {
 const inputDefaultDate = new Date();
 
 function SubmitForm({ isInHome, selectedMonth }) {
+  const { openToast } = useCustomToast();
   const queryClient = useQueryClient();
   const { isLoading: postsUpdateLoading, mutate } = useMutation({
     mutationFn: (variable) => todosApi.todos.postTodos(variable),
     onSuccess: () => {
-      alert("성공했어!");
-      queryClient.invalidateQueries([QUERY_POSTS]);
+      openToast({
+        type: TOAST_TYPE_SUCCESS,
+        title: "새로운 지출내역이 생성되었습니다. :)",
+      });
+      queryClient.invalidateQueries({ queryKey: [QUERY_POSTS] });
     },
     onError: (e) => {
       console.log(e);
-      alert("실패했어");
+      openToast({
+        type: TOAST_TYPE_ERROR,
+        title: "다시 한번 시도해주세요 :(",
+      });
     },
   });
 
@@ -101,7 +113,7 @@ function SubmitForm({ isInHome, selectedMonth }) {
           <StMessageSpan>{message[FORM_DESCRIPTION]}</StMessageSpan>
         </StInputSection>
 
-        <StButton type="submit">수정</StButton>
+        <StButton type="submit">저장</StButton>
       </StFormHome>
     </StCardStyleDiv>
   );

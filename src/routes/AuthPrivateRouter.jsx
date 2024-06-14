@@ -8,6 +8,7 @@ const AuthPrivateRouter = () => {
   return (
     <>
       <NavBar />
+      <div className="h-20"></div>
       <Outlet />
     </>
   );

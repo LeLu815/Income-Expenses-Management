@@ -2,12 +2,12 @@ import { Button } from "@mui/material";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-import { useToast } from "react-toastify";
 
 import api from "../../api/api";
 import {
+  TOAST_TYPE_ERROR,
   TOAST_TYPE_SUCCESS,
-  TOAST_TYPE_WARNING,
+  useCustomToast,
 } from "../../context/toast.context";
 import useFormCustom from "../../hooks/useFormCustom";
 import { joinSchema, loginSchema } from "../../util/authSchema";
@@ -15,7 +15,7 @@ import { ACCESS_TOKEN, QUERY_USER } from "../../util/constant";
 import { setDataToSession } from "../../util/storageFunc";
 
 function AuthSubmitForm({ type }) {
-  const { openToast } = useToast();
+  const { openToast } = useCustomToast();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { isPending, mutate } = useMutation({
@@ -40,7 +40,7 @@ function AuthSubmitForm({ type }) {
     },
     onError: () => {
       openToast({
-        type: TOAST_TYPE_WARNING,
+        type: TOAST_TYPE_ERROR,
         title: "입력하신 정보를 다시 확인해주세요 :(",
       });
     },

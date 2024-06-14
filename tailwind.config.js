@@ -4,6 +4,8 @@ export default {
   theme: {
     extend: {
       inset: {
+        "-10": "-10px",
+        "-15": "-30px",
         "-20": "-95px", // 새로운 inset 값을 추가
       },
     },
