@@ -16,9 +16,9 @@ function MonthGragh({
 }) {
   return (
     <StCardStyleDiv>
-      <StTitle>{`${
-        parseInt(selectedMonth) + 1
-      }월 총 지출 : ${totalAmount}`}</StTitle>
+      <StTitle>{`${parseInt(selectedMonth) + 1}월 총 지출 : ${priceToKor(
+        totalAmount
+      )}`}</StTitle>
       <StGraphContainer>
         {Object.keys(selectedMonthPostObj).map((key, index) => (
           <StGraphPortion
