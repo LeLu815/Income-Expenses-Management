@@ -1,5 +1,7 @@
+import AuthSubmitForm from "../AuthSubmitForm";
+
 function JoinPage() {
-  return <div>JoinPage</div>;
+  return <AuthSubmitForm type="join" />;
 }
 
 export default JoinPage;

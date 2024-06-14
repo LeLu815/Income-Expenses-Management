@@ -1,5 +1,7 @@
+import AuthSubmitForm from "../AuthSubmitForm";
+
 function LoginPage() {
-  return <div>LoginPage</div>;
+  return <AuthSubmitForm type="login" />;
 }
 
 export default LoginPage;

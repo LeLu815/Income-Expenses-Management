@@ -3,6 +3,5 @@ export const graphPercent = (total, amount) => {
 };
 export const priceToKor = (price) => {
   const formatted = parseInt(price).toLocaleString("ko-KR");
-  console.log(price, parseInt(price), parseInt(price).toLocaleString("ko-KR"));
   return `${formatted} 원`;
 };

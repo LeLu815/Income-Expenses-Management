@@ -13,7 +13,6 @@ export const StGraphPortion = styled.div`
   height: 100%;
   background-color: ${(props) => props.$colorChip};
   width: ${(props) => {
-    console.log("percent :", props.$percent);
     return `${props.$percent}%`;
   }};
   transition: width 0.2s ease-in-out 0s;
