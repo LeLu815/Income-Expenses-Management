@@ -2,6 +2,12 @@ import { z } from "zod";
 const passwordPattern = new RegExp(
   /([a-zA-Z]+[0-9]+|[0-9]+[a-zA-Z]+)|([a-zA-Z]+[?.,;:|*~`!^-_+<>@#$%&='"]+)|([0-9]+[?.,;:|*~`!^-_+<>@#$%&='"]+)/g
 );
+const ACCEPTED_IMAGE_MIME_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
 
 export const joinSchema = z
   .object({
@@ -44,10 +50,15 @@ export const loginSchema = z.object({
     .max(20, { message: "비밀번호는 20자 이하로 입력해주세요." }),
 });
 
-export const userDataSchema = z.object({
-  avatar: z.string(),
-  nickname: z
-    .string()
-    .min(2, { message: "2자 이상 작성해주세요." })
-    .max(10, { message: "10자 이하로 작성해주세요. " }),
-});
+export const userDataSchema = z
+  .object({
+    avatar: z.any(),
+    nickname: z
+      .string()
+      .min(2, { message: "2자 이상 작성해주세요." })
+      .max(10, { message: "10자 이하로 작성해주세요. " }),
+  })
+  .refine((file) => ACCEPTED_IMAGE_MIME_TYPES.includes(file["avatar"].type), {
+    message: "파일 형식은 .jpg, .jpeg, .png 만 가능합니다.",
+    path: ["avatar"],
+  });

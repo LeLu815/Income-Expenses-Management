@@ -50,18 +50,14 @@ class AuthApi {
   }
 
   async patchUserInfo({ avatar, nickname }) {
-    const response = await this.#client.patch(
-      "/profile",
-      {
-        avatar,
-        nickname,
+    const formData = new FormData();
+    formData.append("avatar", avatar);
+    formData.append("nickname", nickname);
+    const response = await this.#client.patch("/profile", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
       },
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
+    });
     return response;
   }
 }

@@ -1,8 +1,10 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router";
-import { Link } from "react-router-dom";
+import { redirect, useNavigate, useParams } from "react-router";
 
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { todosApi } from "../../api/api";
 import {
   FORM_CATEGORY,
   FORM_DATE,
@@ -11,10 +13,6 @@ import {
   POST_ID,
 } from "../../constant/constant";
 import useFormCustom from "../../hooks/useFormCustom";
-import {
-  delete_action,
-  update_action,
-} from "../../redux/reducers/post.reducer";
 import { StCardStyleDiv } from "../../styles/cardLayout";
 import {
   StButton,
@@ -24,6 +22,7 @@ import {
   StLabel,
   StMessageSpan,
 } from "../../styles/formLayout";
+import { QUERY_POSTS } from "../../util/constant";
 import { postSchema } from "../../util/postSchema";
 
 const resolver = (formData) => {
@@ -31,48 +30,82 @@ const resolver = (formData) => {
   return success ? {} : error.flatten().fieldErrors;
 };
 
+const initialValue = {
+  category: "",
+  date: "",
+  price: "",
+  descriptionƒ: "",
+};
+
 function Detail() {
-  const dispatch = useDispatch();
   const params = useParams();
   const paramsId = params[POST_ID];
-  const posts = useSelector((state) => state.post);
+  const [currentPost, setCurrentPost] = useState(initialValue);
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  const {
+    data,
+    isLoading: postsLoading,
+    isError: postsError,
+  } = useQuery({
+    queryKey: [QUERY_POSTS],
+    queryFn: () => todosApi.todos.getTodos(),
+  });
+
+  const { isLoading: postsPatchLoading, mutate: pathMutate } = useMutation({
+    mutationFn: (variables) => todosApi.todos.patchTodos(variables),
+    onSuccess: () => {
+      alert("성공했어!");
+      queryClient.invalidateQueries([QUERY_POSTS]);
+    },
+    onError: () => {
+      alert("실패했어");
+    },
+  });
+  const { isLoading: postsDeleteLoading, mutate: deleteMutate } = useMutation({
+    mutationFn: (variables) => todosApi.todos.deleteTodos(variables),
+    onSuccess: () => {
+      alert("성공했어!");
+      queryClient.invalidateQueries([QUERY_POSTS]);
+      return navigate("/");
+    },
+    onError: () => {
+      alert("실패했어");
+    },
+  });
+
   const setPost = (changedPost) => {
-    dispatch({
-      type: update_action,
-      payload: {
-        paramsId: paramsId,
-        changedPost: changedPost,
-      },
+    console.log(changedPost);
+    pathMutate({
+      id: paramsId,
+      newTodo: changedPost,
     });
   };
   const { handleSubmit, formRef, message } = useFormCustom({
     resolver,
     onSubmit: setPost,
   });
-  const navigate = useNavigate();
-
-  if (!POST_ID) {
-    return (
-      <div>
-        <h1>삭제된 지출 내역입니다!.</h1>
-        <Link to="/">
-          <button>홈으로 이동</button>
-        </Link>
-      </div>
-    );
-  }
-  const currentPost = posts.find((post) => post.id === paramsId);
 
   const handleDelete = () => {
     if (!confirm("정말로 이 지출 항목을 삭제하시겠습니까?")) {
       return;
     }
-    dispatch({
-      type: delete_action,
-      payload: paramsId,
-    });
-    navigate("/");
+    deleteMutate(paramsId);
   };
+
+  useEffect(() => {
+    if (data) {
+      const currentPost = data.data.find((post) => post.id === paramsId);
+      setCurrentPost(currentPost);
+    }
+  }, [data]);
+  useEffect(() => {
+    if (postsError) {
+      alert("삭제된 기록입니다.");
+      return navigate("/");
+    }
+  }, [postsError]);
 
   return (
     <StCardStyleDiv>
@@ -148,3 +181,22 @@ export default Detail;
 const StFormHome = styled(StForm)`
   flex-direction: ${(props) => (props.$isInHome ? "row" : "column")};
 `;
+
+export const loader = ({ params }) => {
+  if (!params || params === "") {
+    alert("삭제된 기록입니다.");
+    return redirect("/");
+  }
+  return null;
+};
+
+const DeleteAlert = () => {
+  return (
+    <div>
+      <h1>삭제된 지출 내역입니다!.</h1>
+      <Link to="/">
+        <button>홈으로 이동</button>
+      </Link>
+    </div>
+  );
+};

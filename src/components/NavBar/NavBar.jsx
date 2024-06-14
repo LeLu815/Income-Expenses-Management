@@ -20,6 +20,8 @@ function NavBar() {
       return api.auth.getUserInfo();
     },
   });
+  const userImageUrl =
+    userData && userData.data.avatar ? userData.data.avatar : defaultImage;
 
   const handleClicklogout = () => {
     api.auth.logout();
@@ -33,7 +35,7 @@ function NavBar() {
       </div>
       <div>
         <div>
-          <img src={defaultImage} alt="유저 프로필 이미지" />
+          <img src={userImageUrl} alt="유저 프로필 이미지" />
           <span>{userData && userData.data.nickname}</span>
         </div>
         <button onClick={handleClicklogout}>로그아웃</button>

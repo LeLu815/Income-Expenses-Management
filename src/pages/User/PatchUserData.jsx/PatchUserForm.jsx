@@ -1,16 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useId, useState } from "react";
+import { useId, useState } from "react";
 
+import { useNavigate } from "react-router";
 import api from "../../../api/api";
-import defaultImage from "../../../assets/defaultImage.jpeg";
+import defaultImage from "../../../assets/clickImage.png";
 import useFormCustom from "../../../hooks/useFormCustom";
 import { userDataSchema } from "../../../util/authSchema";
 import { QUERY_USER } from "../../../util/constant";
 
 function PatchUserForm() {
-  const [temperUrl, setTemperUrl] = useState(null);
-  const [imageFile, setImageFile] = useState(null);
+  const navigate = useNavigate();
+  const [temperUrl, setTemperUrl] = useState(defaultImage);
   const queryClient = useQueryClient();
+  const id = useId();
+
+  // 유저 데이터 get 쿼리
   const {
     data: userData,
     isLoading: userDataLoading,
@@ -18,12 +22,10 @@ function PatchUserForm() {
   } = useQuery({
     queryKey: [QUERY_USER],
     queryFn: () => api.auth.getUserInfo(),
-    onSuccess: () => {
-      queryClient.invalidateQueries([QUERY_USER]);
-    },
-    onError: () => {},
   });
-  const { isPending, mutate } = useMutation({
+
+  // 유저 데이터 업로드 쿼리
+  const { isLoading: userDatauploadLoading, mutate } = useMutation({
     mutationFn: (variables) => api.auth.patchUserInfo(variables),
     onSuccess: () => {
       alert("성공했어!");
@@ -33,7 +35,7 @@ function PatchUserForm() {
       alert("실패했어");
     },
   });
-  const id = useId();
+
   const onSubmitFunc = (userFormData) => {
     mutate(userFormData);
   };
@@ -48,27 +50,26 @@ function PatchUserForm() {
 
   const imageUpload = (e) => {
     const file = e.target.files[0];
-    setImageFile(file);
     setTemperUrl(URL.createObjectURL(file));
   };
-
-  useEffect(() => {
-    setTemperUrl(userData?.data.avatar ? userData.data.avatar : defaultImage);
-  }, []);
 
   return (
     <form ref={formRef} onSubmit={handleSubmit}>
       <label htmlFor={id}>
         <img src={temperUrl} alt="유저 이미지" />
       </label>
-      <input type="file" name="" id={id} onChange={(e) => imageUpload(e)} />
-      <input type="text" name="avatar" />
+      <input
+        type="file"
+        name="avatar"
+        id={id}
+        onChange={(e) => imageUpload(e)}
+      />
       <input
         type="text"
         name="nickname"
         defaultValue={userData && userData.data.nickname}
       />
-      <button>제출</button>
+      <button type="sumbit">제출</button>
     </form>
   );
 }

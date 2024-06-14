@@ -4,12 +4,7 @@ import { ACCESS_TOKEN } from "../util/constant";
 import { getDataToSession } from "../util/storageFunc";
 
 function PublicRouter() {
-  return (
-    <>
-      <div>시바</div>
-      <Outlet />
-    </>
-  );
+  return <Outlet />;
 }
 export const publicLoader = async () => {
   let accesToken;
