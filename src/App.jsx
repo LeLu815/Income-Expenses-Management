@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import { RouterProvider } from "react-router-dom";
 
 import "./App.css";
+import { AlertProvider } from "./context/alert.context";
+import { ToastProvider } from "./context/toast.context";
 import router from "./routes/routes";
 import GlobalStyles from "./styles/globalStyles";
 import { setDataToSession } from "./util/storageFunc";
@@ -17,9 +19,13 @@ function App() {
   }, []);
   return (
     <QueryClientProvider client={queryClient}>
-      <GlobalStyles />
-      <RouterProvider router={router} />
-      <ReactQueryDevtools initialIsOpen={false} />
+      <ToastProvider>
+        <AlertProvider>
+          <GlobalStyles />
+          <RouterProvider router={router} />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </AlertProvider>
+      </ToastProvider>
     </QueryClientProvider>
   );
 }

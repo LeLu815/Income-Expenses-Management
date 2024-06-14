@@ -2,7 +2,11 @@
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      inset: {
+        "-20": "-95px", // 새로운 inset 값을 추가
+      },
+    },
   },
   plugins: [],
 };
