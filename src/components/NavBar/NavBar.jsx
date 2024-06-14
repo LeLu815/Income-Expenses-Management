@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -28,17 +29,25 @@ function NavBar() {
     return navigate("/login");
   };
   return (
-    <div>
-      <div>
-        <Link to="/">홈</Link>
-        <Link to="/user/info">내 프로필</Link>
-      </div>
-      <div>
-        <div>
-          <img src={userImageUrl} alt="유저 프로필 이미지" />
-          <span>{userData && userData.data.nickname}</span>
+    <div className="flex items-center justify-center fixed top-0 right-0 left-0 bg-zinc-800 ">
+      <div className="py-3 flex justify-between text-white min-w-[800px] max-w-[1280px] w-full">
+        <div className="flex gap-16 items-center ">
+          <Link to="/">HOME</Link>
+          <Link to="/user/info">내 프로필</Link>
         </div>
-        <button onClick={handleClicklogout}>로그아웃</button>
+        <div className="flex gap-16 items-center ">
+          <div className="flex gap-4 items-center ">
+            <img
+              className="w-16 h-16 rounded-full object-cover"
+              src={userImageUrl}
+              alt="유저 프로필 이미지"
+            />
+            <span>{userData && userData.data.nickname}</span>
+          </div>
+          <Button variant="contained" color="error" onClick={handleClicklogout}>
+            로그아웃
+          </Button>
+        </div>
       </div>
     </div>
   );

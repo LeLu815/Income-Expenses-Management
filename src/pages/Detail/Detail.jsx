@@ -2,7 +2,6 @@ import { redirect, useNavigate, useParams } from "react-router";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { todosApi } from "../../api/api";
 import {
@@ -188,15 +187,4 @@ export const loader = ({ params }) => {
     return redirect("/");
   }
   return null;
-};
-
-const DeleteAlert = () => {
-  return (
-    <div>
-      <h1>삭제된 지출 내역입니다!.</h1>
-      <Link to="/">
-        <button>홈으로 이동</button>
-      </Link>
-    </div>
-  );
 };
