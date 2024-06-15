@@ -42,10 +42,9 @@ function SubmitForm({ isInHome, selectedMonth }) {
         type: TOAST_TYPE_SUCCESS,
         title: "새로운 지출내역이 생성되었습니다. :)",
       });
-      queryClient.invalidateQueries({ queryKey: [QUERY_POSTS] });
+      queryClient.invalidateQueries([QUERY_POSTS]);
     },
     onError: (e) => {
-      console.log(e);
       openToast({
         type: TOAST_TYPE_ERROR,
         title: "다시 한번 시도해주세요 :(",

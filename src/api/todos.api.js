@@ -12,7 +12,6 @@ class TodosApi {
     return response;
   }
   async patchTodos({ id, newTodo }) {
-    console.log("patchTodos :", id, newTodo);
     const response = await this.#client.patch(`/${id}`, newTodo);
     return response;
   }

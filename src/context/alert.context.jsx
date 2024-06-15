@@ -79,20 +79,22 @@ export const AlertProvider = ({ children }) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="alert-dialog-title">{alertData.title}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {alertData.description}
-          </DialogContentText>
-        </DialogContent>
+        <div className="px-8 py-3">
+          <DialogTitle id="alert-dialog-title">{alertData.title}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              {alertData.description}
+            </DialogContentText>
+          </DialogContent>
 
-        <DialogActions>
-          {alertData.button && (
-            <Button variant="outlined" onClick={handleConfirm}>
-              {alertData.button}
-            </Button>
-          )}
-        </DialogActions>
+          <DialogActions>
+            {alertData.button && (
+              <Button variant="outlined" onClick={handleConfirm}>
+                {alertData.button}
+              </Button>
+            )}
+          </DialogActions>
+        </div>
       </Dialog>
     </AlertContext.Provider>
   );

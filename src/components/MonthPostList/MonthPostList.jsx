@@ -14,6 +14,11 @@ function MonthPostList({ selectedMonthPosts }) {
   return (
     <StCardStyleDiv>
       <StUl>
+        {(!selectedMonthPosts || selectedMonthPosts.length === 0) && (
+          <div className="flex justify-center font-normal text-xl text-gray-300 py-[20px]">
+            기록된 지출이 없습니다.
+          </div>
+        )}
         {selectedMonthPosts.map((post) => (
           <Link key={post.id} to={`/expense/${post.id}`}>
             <StCardStyleDivPost>

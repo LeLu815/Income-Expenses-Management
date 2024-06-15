@@ -1,11 +1,53 @@
 {
   "todos": [
     {
-      "id": "2b2a",
+      "id": "1774",
       "date": "2024-06-01",
-      "category": "크 해결했다~~~~~",
+      "category": "컬러 테스트 1",
       "price": "30000",
       "description": "멋쟁이사자 해커톤 프로젝트 \"모여\" 카카오톡 친구 공유 템플릿"
+    },
+    {
+      "id": "bde1",
+      "date": "2024-06-01",
+      "category": "컬러 테스트 2",
+      "price": "25000",
+      "description": "컬러 테스트 2"
+    },
+    {
+      "id": "bde8",
+      "date": "2024-02-01",
+      "category": "컬러 테스트 1",
+      "price": "24500",
+      "description": "회식"
+    },
+    {
+      "id": "7868",
+      "date": "2024-02-01",
+      "category": "컬러 추가 2",
+      "price": "40000",
+      "description": "스파르타코딩클럽 심화 개인 과제!"
+    },
+    {
+      "id": "c312",
+      "date": "2024-02-01",
+      "category": "이인천재",
+      "price": "25000",
+      "description": "zsczcascasc"
+    },
+    {
+      "id": "aa36",
+      "date": "2024-06-01",
+      "category": "삭제 테스트",
+      "price": "25000",
+      "description": "멋쟁이사자 해커톤 프로젝트 \"모여\" 카카오톡 친구 공유 템플릿"
+    },
+    {
+      "id": "59ed",
+      "date": "2024-06-01",
+      "category": "이인천재",
+      "price": "36000",
+      "description": "스파르타코딩클럽 심화 개인 과제!"
     }
   ]
 }
