@@ -6,6 +6,7 @@ import JoinPage from "../pages/Auth/JoinPage";
 import LoginPage from "../pages/Auth/LoginPage";
 import Detail, { loader as detailLoader } from "../pages/Detail";
 import Home from "../pages/Home";
+import NotFount from "../pages/NotFount";
 import PatchUserData from "../pages/User/PatchUserData.jsx/PatchUserData";
 import AuthPrivateRouter, { privateLoader } from "./AuthPrivateRouter";
 import PublicRouter, { publicLoader } from "./PublicRouter";
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
           },
           { path: "/user/info", element: <PatchUserData /> },
         ],
+      },
+      {
+        path: "*",
+        element: <NotFount />,
       },
     ],
   },

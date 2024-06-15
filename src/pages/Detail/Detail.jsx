@@ -1,8 +1,9 @@
-import { redirect, useNavigate, useParams } from "react-router";
-
+import { Button } from "@mui/material";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { redirect, useNavigate, useParams } from "react-router";
 import styled from "styled-components";
+
 import { todosApi } from "../../api/api";
 import {
   FORM_CATEGORY,
@@ -11,16 +12,15 @@ import {
   FORM_PRICE,
   POST_ID,
 } from "../../constant/constant";
+import { useCustomModal } from "../../context/alert.context";
+import {
+  TOAST_TYPE_ERROR,
+  TOAST_TYPE_SUCCESS,
+  useCustomToast,
+} from "../../context/toast.context";
 import useFormCustom from "../../hooks/useFormCustom";
 import { StCardStyleDiv } from "../../styles/cardLayout";
-import {
-  StButton,
-  StForm,
-  StInput,
-  StInputSection,
-  StLabel,
-  StMessageSpan,
-} from "../../styles/formLayout";
+import { StForm } from "../../styles/formLayout";
 import { QUERY_POSTS } from "../../util/constant";
 import { postSchema } from "../../util/postSchema";
 
@@ -37,11 +37,18 @@ const initialValue = {
 };
 
 function Detail() {
+  const { openToast } = useCustomToast();
   const params = useParams();
   const paramsId = params[POST_ID];
   const [currentPost, setCurrentPost] = useState(initialValue);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const {
+    openModal,
+    closeModal,
+    confirm: confrimModal,
+    setConfirm,
+  } = useCustomModal();
 
   const {
     data,
@@ -55,27 +62,38 @@ function Detail() {
   const { isLoading: postsPatchLoading, mutate: pathMutate } = useMutation({
     mutationFn: (variables) => todosApi.todos.patchTodos(variables),
     onSuccess: () => {
-      alert("성공했어!");
+      openToast({
+        type: TOAST_TYPE_SUCCESS,
+        title: "업데이트 되었습니다. 감사합니다 :)",
+      });
       queryClient.invalidateQueries([QUERY_POSTS]);
     },
     onError: () => {
-      alert("실패했어");
+      openToast({
+        type: TOAST_TYPE_ERROR,
+        title: "업데이트가 실패했습니다. 다시 시도해주세요 :(",
+      });
     },
   });
   const { isLoading: postsDeleteLoading, mutate: deleteMutate } = useMutation({
     mutationFn: (variables) => todosApi.todos.deleteTodos(variables),
     onSuccess: () => {
-      alert("성공했어!");
+      openToast({
+        type: TOAST_TYPE_SUCCESS,
+        title: "삭제 되었습니다. 감사합니다 :)",
+      });
       queryClient.invalidateQueries([QUERY_POSTS]);
       return navigate("/");
     },
     onError: () => {
-      alert("실패했어");
+      openToast({
+        type: TOAST_TYPE_ERROR,
+        title: "삭제에 실패했습니다. 다시 시도해주세요 :(",
+      });
     },
   });
 
   const setPost = (changedPost) => {
-    console.log(changedPost);
     pathMutate({
       id: paramsId,
       newTodo: changedPost,
@@ -87,21 +105,38 @@ function Detail() {
   });
 
   const handleDelete = () => {
-    if (!confirm("정말로 이 지출 항목을 삭제하시겠습니까?")) {
-      return;
-    }
-    deleteMutate(paramsId);
+    openModal({
+      title: "지출 항목 삭제",
+      description: "정말로 이 지출 항목을 삭제하시겠습니까?",
+      button: "삭제",
+    });
   };
+  useEffect(() => {
+    if (confrimModal) {
+      deleteMutate(paramsId);
+    }
+    setConfirm(false);
+  }, [confrimModal]);
 
   useEffect(() => {
     if (data) {
       const currentPost = data.data.find((post) => post.id === paramsId);
+      if (!currentPost) {
+        openModal({
+          title: "삭제된 기록",
+          description: "삭제된 기록입니다. :(",
+        });
+        return navigate("/");
+      }
       setCurrentPost(currentPost);
     }
   }, [data]);
   useEffect(() => {
     if (postsError) {
-      alert("삭제된 기록입니다.");
+      openModal({
+        title: "삭제된 기록",
+        description: "삭제된 기록입니다. :(",
+      });
       return navigate("/");
     }
   }, [postsError]);
@@ -109,67 +144,117 @@ function Detail() {
   return (
     <StCardStyleDiv>
       <StFormHome $isInHome={false} ref={formRef} onSubmit={handleSubmit}>
-        <StInputSection>
-          <StLabel htmlFor={FORM_DATE}>날짜</StLabel>
-          <StInput
-            type="date"
-            name={FORM_DATE}
-            id={FORM_DATE}
-            min="2022-01-01"
-            defaultValue={currentPost[FORM_DATE]}
-            required
-          />
-          <StMessageSpan>{message[FORM_DATE]}</StMessageSpan>
-        </StInputSection>
+        <h1 className="font-semibold text-2xl text-gray-500 mb-10">
+          지출 기록 수정
+        </h1>
+        <div className="mx-auto flex flex-col gap-8 items-end">
+          <div className="flex gap-2 relative items-center">
+            <label
+              className="text-gray-500 font-bold text-lg"
+              htmlFor={FORM_DATE}
+            >
+              날짜
+            </label>
+            <input
+              className="p-2 rounded w-[350px] border-slate-300 border border-solid"
+              type="date"
+              name={FORM_DATE}
+              id={FORM_DATE}
+              min="2022-01-01"
+              defaultValue={currentPost[FORM_DATE]}
+              required
+            />
+            <span className="absolute top-11 -left-20 text-rose-500 w-[600px] text-center">
+              {message[FORM_DATE]}
+            </span>
+          </div>
 
-        <StInputSection>
-          <StLabel htmlFor={FORM_CATEGORY}>항목</StLabel>
-          <StInput
-            type="text"
-            name={FORM_CATEGORY}
-            id={FORM_CATEGORY}
-            defaultValue={currentPost[FORM_CATEGORY]}
-            required
-          />
-          <StMessageSpan>{message[FORM_CATEGORY]}</StMessageSpan>
-        </StInputSection>
+          <div className="flex gap-2 relative items-center">
+            <label
+              className="text-gray-500 font-bold text-lg"
+              htmlFor={FORM_CATEGORY}
+            >
+              항목
+            </label>
+            <input
+              className="p-2 rounded w-[350px] border-slate-300 border border-solid"
+              type="text"
+              name={FORM_CATEGORY}
+              id={FORM_CATEGORY}
+              defaultValue={currentPost[FORM_CATEGORY]}
+              required
+            />
+            <span className="absolute top-11 -left-20 text-rose-500 w-[600px] text-center">
+              {message[FORM_CATEGORY]}
+            </span>
+          </div>
 
-        <StInputSection>
-          <StLabel htmlFor={FORM_PRICE}>금액</StLabel>
-          <StInput
-            type="number"
-            name={FORM_PRICE}
-            id={FORM_PRICE}
-            defaultValue={currentPost[FORM_PRICE]}
-            required
-          />
-          <StMessageSpan>{message[FORM_PRICE]}</StMessageSpan>
-        </StInputSection>
+          <div className="flex gap-2 relative items-center">
+            <label
+              className="text-gray-500 font-bold text-lg"
+              htmlFor={FORM_PRICE}
+            >
+              금액
+            </label>
+            <input
+              className="p-2 rounded w-[350px] border-slate-300 border border-solid"
+              type="number"
+              name={FORM_PRICE}
+              id={FORM_PRICE}
+              defaultValue={currentPost[FORM_PRICE]}
+              required
+            />
+            <span className="absolute top-11 -left-20 text-rose-500 w-[600px] text-center">
+              {message[FORM_PRICE]}
+            </span>
+          </div>
 
-        <StInputSection>
-          <StLabel htmlFor={FORM_DESCRIPTION}>내용</StLabel>
-          <StInput
-            type="text"
-            name={FORM_DESCRIPTION}
-            id={FORM_DESCRIPTION}
-            defaultValue={currentPost[FORM_DESCRIPTION]}
-            required
-          />
-          <StMessageSpan>{message[FORM_DESCRIPTION]}</StMessageSpan>
-        </StInputSection>
+          <div className="flex gap-2 relative items-center">
+            <label
+              className="text-gray-500 font-bold text-lg"
+              htmlFor={FORM_DESCRIPTION}
+            >
+              내용
+            </label>
+            <input
+              className="p-2 rounded w-[350px] border-slate-300 border border-solid"
+              type="text"
+              name={FORM_DESCRIPTION}
+              id={FORM_DESCRIPTION}
+              defaultValue={currentPost[FORM_DESCRIPTION]}
+              required
+            />
+            <span className="absolute top-11 -left-20 text-rose-500 w-[600px] text-center">
+              {message[FORM_DESCRIPTION]}
+            </span>
+          </div>
 
-        <StButton type="submit">저장</StButton>
-        <StButton type="button" onClick={handleDelete}>
-          삭제
-        </StButton>
-        <StButton
-          type="button"
-          onClick={() => {
-            navigate(-1);
-          }}
-        >
-          뒤로가기
-        </StButton>
+          <div className="flex gap-3 justify-between items-center">
+            <Button className="w-[100px]" variant="contained" type="submit">
+              저장
+            </Button>
+            <Button
+              className="w-[100px]"
+              color="error"
+              variant="outlined"
+              type="button"
+              onClick={handleDelete}
+            >
+              삭제
+            </Button>
+            <Button
+              className="w-[100px]"
+              variant="outlined"
+              color="success"
+              type="button"
+              onClick={() => {
+                navigate(-1);
+              }}
+            >
+              뒤로가기
+            </Button>
+          </div>
+        </div>
       </StFormHome>
     </StCardStyleDiv>
   );
@@ -179,6 +264,7 @@ export default Detail;
 
 const StFormHome = styled(StForm)`
   flex-direction: ${(props) => (props.$isInHome ? "row" : "column")};
+  padding: 25px;
 `;
 
 export const loader = ({ params }) => {

@@ -29,7 +29,7 @@ function NavBar() {
     return navigate("/login");
   };
   return (
-    <div className="flex items-center justify-center fixed top-0 right-0 left-0 bg-zinc-800 ">
+    <div className="flex items-center justify-center fixed top-0 right-0 left-0 bg-zinc-800 px-8">
       <div className="py-3 flex justify-between text-white min-w-[800px] max-w-[1280px] w-full">
         <div className="flex gap-16 items-center ">
           <Link to="/">HOME</Link>

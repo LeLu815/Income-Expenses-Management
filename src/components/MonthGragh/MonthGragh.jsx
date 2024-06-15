@@ -1,12 +1,9 @@
 import styled from "styled-components";
 
-import {
-  StGraphContainer,
-  StGraphPortion,
-  colorChipList,
-} from "../../styles/ graphLayout";
+import { StGraphContainer, StGraphPortion } from "../../styles/ graphLayout";
 import { StCardStyleDiv } from "../../styles/cardLayout";
 import { graphPercent, priceToKor } from "../../util/calculation";
+import { getColorList } from "../../util/storageFunc";
 
 function MonthGragh({
   selectedMonth,
@@ -14,11 +11,13 @@ function MonthGragh({
   selectedMonthPostObj,
   totalAmount,
 }) {
+  const colorChipList = getColorList();
+
   return (
     <StCardStyleDiv>
-      <StTitle>{`${
-        parseInt(selectedMonth) + 1
-      }월 총 지출 : ${totalAmount}`}</StTitle>
+      <StTitle>{`${parseInt(selectedMonth) + 1}월 총 지출 : ${priceToKor(
+        totalAmount
+      )}`}</StTitle>
       <StGraphContainer>
         {Object.keys(selectedMonthPostObj).map((key, index) => (
           <StGraphPortion

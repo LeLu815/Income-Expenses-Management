@@ -8,7 +8,11 @@ import SelectMonth from "../../components/SelectMonth";
 import SubmitForm from "../../components/SubmitForm";
 import { MONTH_KEY } from "../../constant/constant";
 import { QUERY_POSTS } from "../../util/constant";
-import { getDataToSession } from "../../util/storageFunc";
+import {
+  addMoreColor,
+  getColorCount,
+  getDataToSession,
+} from "../../util/storageFunc";
 
 function Home() {
   const [selectedMonth, setSelectedMonth] = useState(
@@ -52,6 +56,11 @@ function Home() {
         })
       );
       setSelectedMonthPostObj(selectedMonthPostObj);
+      const objLength = Object.keys(selectedMonthPostObj).length;
+      const colorLength = getColorCount();
+      if (objLength > colorLength) {
+        addMoreColor(objLength);
+      }
       setTotalAmount(totalAmount);
     }
   }, [data, selectedMonth]);

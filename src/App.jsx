@@ -8,7 +8,7 @@ import { AlertProvider } from "./context/alert.context";
 import { ToastProvider } from "./context/toast.context";
 import router from "./routes/routes";
 import GlobalStyles from "./styles/globalStyles";
-import { setDataToSession } from "./util/storageFunc";
+import { initialColor, setDataToSession } from "./util/storageFunc";
 
 function App() {
   const queryClient = new QueryClient();
@@ -17,6 +17,11 @@ function App() {
     const newSelectedMonth = new Date().getMonth();
     setDataToSession("selectedMonth", newSelectedMonth);
   }, []);
+  useEffect(() => {
+    // 최초에 한번만 실행할 것
+    initialColor();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <ToastProvider>

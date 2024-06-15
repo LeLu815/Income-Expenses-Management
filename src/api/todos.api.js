@@ -12,12 +12,11 @@ class TodosApi {
     return response;
   }
   async patchTodos({ id, newTodo }) {
-    console.log("patchTodos :", id, newTodo);
     const response = await this.#client.patch(`/${id}`, newTodo);
     return response;
   }
   async deleteTodos(id) {
-    const response = await this.#client.patch(`/${id}`);
+    const response = await this.#client.delete(`/${id}`);
     return response;
   }
 }
