@@ -17,7 +17,7 @@ class TodosApi {
     return response;
   }
   async deleteTodos(id) {
-    const response = await this.#client.patch(`/${id}`);
+    const response = await this.#client.delete(`/${id}`);
     return response;
   }
 }

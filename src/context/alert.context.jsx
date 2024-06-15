@@ -1,7 +1,12 @@
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
 import { produce } from "immer";
-import { createContext, useContext, useState } from "react";
+import { createContext, forwardRef, useContext, useRef, useState } from "react";
 
 export const TYPE_SUCCESS = "success";
 export const TYPE_INFO = "info";
@@ -11,51 +16,86 @@ export const TYPE_ERROR = "error";
 const initialState = {
   title: "",
   description: "",
+  button: "",
   isShow: false,
   type: TYPE_SUCCESS,
 };
 const AlertContext = createContext({
   openModal: () => {},
   closeModal: () => {},
+  confirm: false,
+});
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export const AlertProvider = ({ children }) => {
   const [alertData, setAlertData] = useState(initialState);
+  const [confrim, setConfirm] = useState(false);
+  const confrimRef = useRef(null);
+  confrimRef.current = false;
 
   const value = {
-    openModal: ({ type, title, description }) => {
+    openModal: ({ title, description, button = false }) => {
+      setConfirm(false);
       setAlertData({
         title,
         description,
+        button,
         isShow: true,
-        type,
       });
     },
     closeModal: () => {
       setAlertData((prevState) =>
-        produce((prevState, draft) => (draft.isShow = false))
+        produce(prevState, (draft) => {
+          draft.isShow = false;
+        })
       );
     },
+    confirm: confrim,
+    setConfirm,
   };
 
-  const handleClick = () => {
+  const handleClose = () => {
     setAlertData((prevState) =>
-      produce((prevState, draft) => (draft.isShow = false))
+      produce(prevState, (draft) => {
+        draft.isShow = false;
+      })
     );
   };
+  const handleConfirm = () => {
+    setConfirm(true);
+    handleClose();
+  };
+
   return (
     <AlertContext.Provider value={value}>
       {children}
-      <div className="fixed top-12 right-7" onClick={handleClick}>
-        {alertData.isShow && (
-          <Alert severity={alertData.type}>
-            <AlertTitle>{alertData.title}</AlertTitle>
+      <Dialog
+        onClose={handleClose}
+        open={alertData ? alertData.isShow : false}
+        TransitionComponent={Transition}
+        keepMounted
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle id="alert-dialog-title">{alertData.title}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
             {alertData.description}
-          </Alert>
-        )}
-      </div>
+          </DialogContentText>
+        </DialogContent>
+
+        <DialogActions>
+          {alertData.button && (
+            <Button variant="outlined" onClick={handleConfirm}>
+              {alertData.button}
+            </Button>
+          )}
+        </DialogActions>
+      </Dialog>
     </AlertContext.Provider>
   );
 };
 
-export const useAlert = () => useContext(AlertContext);
+export const useCustomModal = () => useContext(AlertContext);

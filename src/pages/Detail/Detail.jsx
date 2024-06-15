@@ -11,6 +11,12 @@ import {
   FORM_PRICE,
   POST_ID,
 } from "../../constant/constant";
+import { useCustomModal } from "../../context/alert.context";
+import {
+  TOAST_TYPE_ERROR,
+  TOAST_TYPE_SUCCESS,
+  useCustomToast,
+} from "../../context/toast.context";
 import useFormCustom from "../../hooks/useFormCustom";
 import { StCardStyleDiv } from "../../styles/cardLayout";
 import {
@@ -37,11 +43,18 @@ const initialValue = {
 };
 
 function Detail() {
+  const { openToast } = useCustomToast();
   const params = useParams();
   const paramsId = params[POST_ID];
   const [currentPost, setCurrentPost] = useState(initialValue);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const {
+    openModal,
+    closeModal,
+    confirm: confrimModal,
+    setConfirm,
+  } = useCustomModal();
 
   const {
     data,
@@ -55,27 +68,38 @@ function Detail() {
   const { isLoading: postsPatchLoading, mutate: pathMutate } = useMutation({
     mutationFn: (variables) => todosApi.todos.patchTodos(variables),
     onSuccess: () => {
-      alert("성공했어!");
+      openToast({
+        type: TOAST_TYPE_SUCCESS,
+        title: "업데이트 되었습니다. 감사합니다 :)",
+      });
       queryClient.invalidateQueries([QUERY_POSTS]);
     },
     onError: () => {
-      alert("실패했어");
+      openToast({
+        type: TOAST_TYPE_ERROR,
+        title: "업데이트가 실패했습니다. 다시 시도해주세요 :(",
+      });
     },
   });
   const { isLoading: postsDeleteLoading, mutate: deleteMutate } = useMutation({
     mutationFn: (variables) => todosApi.todos.deleteTodos(variables),
     onSuccess: () => {
-      alert("성공했어!");
+      openToast({
+        type: TOAST_TYPE_SUCCESS,
+        title: "삭제 되었습니다. 감사합니다 :)",
+      });
       queryClient.invalidateQueries([QUERY_POSTS]);
       return navigate("/");
     },
     onError: () => {
-      alert("실패했어");
+      openToast({
+        type: TOAST_TYPE_ERROR,
+        title: "삭제에 실패했습니다. 다시 시도해주세요 :(",
+      });
     },
   });
 
   const setPost = (changedPost) => {
-    console.log(changedPost);
     pathMutate({
       id: paramsId,
       newTodo: changedPost,
@@ -87,11 +111,18 @@ function Detail() {
   });
 
   const handleDelete = () => {
-    if (!confirm("정말로 이 지출 항목을 삭제하시겠습니까?")) {
-      return;
-    }
-    deleteMutate(paramsId);
+    openModal({
+      title: "지출 항목 삭제",
+      description: "정말로 이 지출 항목을 삭제하시겠습니까?",
+      button: "삭제",
+    });
   };
+  useEffect(() => {
+    if (confrimModal) {
+      deleteMutate(paramsId);
+    }
+    setConfirm(false);
+  }, [confrimModal]);
 
   useEffect(() => {
     if (data) {
@@ -101,7 +132,10 @@ function Detail() {
   }, [data]);
   useEffect(() => {
     if (postsError) {
-      alert("삭제된 기록입니다.");
+      openModal({
+        title: "삭제된 기록",
+        description: "삭제된 기록입니다. :(",
+      });
       return navigate("/");
     }
   }, [postsError]);
