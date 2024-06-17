@@ -112,7 +112,9 @@ function SubmitForm({ isInHome, selectedMonth }) {
           <StMessageSpan>{message[FORM_DESCRIPTION]}</StMessageSpan>
         </StInputSection>
 
-        <StButton type="submit">저장</StButton>
+        <StButton disabled={postsUpdateLoading} type="submit">
+          저장
+        </StButton>
       </StFormHome>
     </StCardStyleDiv>
   );

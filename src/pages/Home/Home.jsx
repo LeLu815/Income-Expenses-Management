@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 import { todosApi } from "../../api/api";
+import Loading from "../../components/Loading";
 import MonthGragh from "../../components/MonthGragh";
 import MonthPostList from "../../components/MonthPostList";
 import SelectMonth from "../../components/SelectMonth";
@@ -82,6 +83,7 @@ function Home() {
         selectedMonth={selectedMonth}
         selectedMonthPosts={selectedMonthPosts}
       />
+      {postsLoading && <Loading />}
     </>
   );
 }
