@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
-import { QUERY_POSTS } from "../../util/constant";
+import { QUERY_POSTS, USER_ID } from "../../util/constant";
 
 import { todosApi } from "../../api/api";
 import {
@@ -25,6 +25,7 @@ import {
   StMessageSpan,
 } from "../../styles/formLayout";
 import { postSchema } from "../../util/postSchema";
+import { getDataToSession } from "../../util/storageFunc";
 
 const resolver = (formValues) => {
   const { success, error } = postSchema.safeParse(formValues);
@@ -70,6 +71,16 @@ function SubmitForm({ isInHome, selectedMonth }) {
   return (
     <StCardStyleDiv>
       <StFormHome $isInHome={isInHome} ref={formRef} onSubmit={handleSubmit}>
+        <input
+          onChange={() => {
+            return getDataToSession(USER_ID);
+          }}
+          value={getDataToSession(USER_ID)}
+          type="text"
+          name={USER_ID}
+          id={USER_ID}
+          className="hidden"
+        />
         <StInputSection>
           <StLabel htmlFor={FORM_DATE}>날짜</StLabel>
           <StInput
@@ -112,7 +123,9 @@ function SubmitForm({ isInHome, selectedMonth }) {
           <StMessageSpan>{message[FORM_DESCRIPTION]}</StMessageSpan>
         </StInputSection>
 
-        <StButton type="submit">저장</StButton>
+        <StButton disabled={postsUpdateLoading} type="submit">
+          저장
+        </StButton>
       </StFormHome>
     </StCardStyleDiv>
   );

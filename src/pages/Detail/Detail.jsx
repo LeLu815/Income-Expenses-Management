@@ -1,10 +1,11 @@
 import { Button } from "@mui/material";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { redirect, useNavigate, useParams } from "react-router";
 import styled from "styled-components";
 
 import { todosApi } from "../../api/api";
+import Loading from "../../components/Loading";
 import {
   FORM_CATEGORY,
   FORM_DATE,
@@ -21,8 +22,9 @@ import {
 import useFormCustom from "../../hooks/useFormCustom";
 import { StCardStyleDiv } from "../../styles/cardLayout";
 import { StForm } from "../../styles/formLayout";
-import { QUERY_POSTS } from "../../util/constant";
+import { QUERY_POSTS, USER_ID } from "../../util/constant";
 import { postSchema } from "../../util/postSchema";
+import { getDataToSession } from "../../util/storageFunc";
 
 const resolver = (formData) => {
   const { success, error } = postSchema.safeParse(formData);
@@ -40,23 +42,17 @@ function Detail() {
   const { openToast } = useCustomToast();
   const params = useParams();
   const paramsId = params[POST_ID];
-  const [currentPost, setCurrentPost] = useState(initialValue);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const {
-    openModal,
-    closeModal,
-    confirm: confrimModal,
-    setConfirm,
-  } = useCustomModal();
+  const { openModal, confirm: confrimModal, setConfirm } = useCustomModal();
 
   const {
-    data,
+    data: currentPost,
     isLoading: postsLoading,
     isError: postsError,
   } = useQuery({
-    queryKey: [QUERY_POSTS],
-    queryFn: () => todosApi.todos.getTodos(),
+    queryKey: [QUERY_POSTS, { id: paramsId }],
+    queryFn: () => todosApi.todos.getTodo(paramsId),
   });
 
   const { isLoading: postsPatchLoading, mutate: pathMutate } = useMutation({
@@ -66,7 +62,7 @@ function Detail() {
         type: TOAST_TYPE_SUCCESS,
         title: "업데이트 되었습니다. 감사합니다 :)",
       });
-      queryClient.invalidateQueries([QUERY_POSTS]);
+      queryClient.invalidateQueries([QUERY_POSTS, { id: paramsId }]);
     },
     onError: () => {
       openToast({
@@ -82,8 +78,8 @@ function Detail() {
         type: TOAST_TYPE_SUCCESS,
         title: "삭제 되었습니다. 감사합니다 :)",
       });
-      queryClient.invalidateQueries([QUERY_POSTS]);
-      return navigate("/");
+      queryClient.invalidateQueries([QUERY_POSTS, { id: paramsId }]);
+      navigate("/");
     },
     onError: () => {
       openToast({
@@ -97,6 +93,7 @@ function Detail() {
     pathMutate({
       id: paramsId,
       newTodo: changedPost,
+      [USER_ID]: getDataToSession(USER_ID),
     });
   };
   const { handleSubmit, formRef, message } = useFormCustom({
@@ -113,26 +110,14 @@ function Detail() {
   };
   useEffect(() => {
     if (confrimModal) {
-      deleteMutate(paramsId);
+      deleteMutate({ id: paramsId, [USER_ID]: getDataToSession(USER_ID) });
     }
     setConfirm(false);
   }, [confrimModal]);
 
   useEffect(() => {
-    if (data) {
-      const currentPost = data.data.find((post) => post.id === paramsId);
-      if (!currentPost) {
-        openModal({
-          title: "삭제된 기록",
-          description: "삭제된 기록입니다. :(",
-        });
-        return navigate("/");
-      }
-      setCurrentPost(currentPost);
-    }
-  }, [data]);
-  useEffect(() => {
     if (postsError) {
+      console.log(postsError);
       openModal({
         title: "삭제된 기록",
         description: "삭제된 기록입니다. :(",
@@ -144,6 +129,16 @@ function Detail() {
   return (
     <StCardStyleDiv>
       <StFormHome $isInHome={false} ref={formRef} onSubmit={handleSubmit}>
+        <input
+          onChange={() => {
+            return getDataToSession(USER_ID);
+          }}
+          value={getDataToSession(USER_ID)}
+          className="hidden"
+          type="text"
+          name={USER_ID}
+          id={USER_ID}
+        />
         <h1 className="font-semibold text-2xl text-gray-500 mb-10">
           지출 기록 수정
         </h1>
@@ -161,7 +156,7 @@ function Detail() {
               name={FORM_DATE}
               id={FORM_DATE}
               min="2022-01-01"
-              defaultValue={currentPost[FORM_DATE]}
+              defaultValue={currentPost && currentPost[FORM_DATE]}
               required
             />
             <span className="absolute top-11 -left-20 text-rose-500 w-[600px] text-center">
@@ -181,7 +176,7 @@ function Detail() {
               type="text"
               name={FORM_CATEGORY}
               id={FORM_CATEGORY}
-              defaultValue={currentPost[FORM_CATEGORY]}
+              defaultValue={currentPost && currentPost[FORM_CATEGORY]}
               required
             />
             <span className="absolute top-11 -left-20 text-rose-500 w-[600px] text-center">
@@ -201,7 +196,7 @@ function Detail() {
               type="number"
               name={FORM_PRICE}
               id={FORM_PRICE}
-              defaultValue={currentPost[FORM_PRICE]}
+              defaultValue={currentPost && currentPost[FORM_PRICE]}
               required
             />
             <span className="absolute top-11 -left-20 text-rose-500 w-[600px] text-center">
@@ -221,7 +216,7 @@ function Detail() {
               type="text"
               name={FORM_DESCRIPTION}
               id={FORM_DESCRIPTION}
-              defaultValue={currentPost[FORM_DESCRIPTION]}
+              defaultValue={currentPost && currentPost[FORM_DESCRIPTION]}
               required
             />
             <span className="absolute top-11 -left-20 text-rose-500 w-[600px] text-center">
@@ -230,7 +225,12 @@ function Detail() {
           </div>
 
           <div className="flex gap-3 justify-between items-center">
-            <Button className="w-[100px]" variant="contained" type="submit">
+            <Button
+              className="w-[100px]"
+              variant="contained"
+              type="submit"
+              disabled={postsPatchLoading}
+            >
               저장
             </Button>
             <Button
@@ -239,6 +239,7 @@ function Detail() {
               variant="outlined"
               type="button"
               onClick={handleDelete}
+              disabled={postsDeleteLoading}
             >
               삭제
             </Button>
@@ -256,6 +257,7 @@ function Detail() {
           </div>
         </div>
       </StFormHome>
+      {postsLoading && <Loading />}
     </StCardStyleDiv>
   );
 }

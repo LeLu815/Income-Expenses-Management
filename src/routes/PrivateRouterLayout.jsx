@@ -1,10 +1,10 @@
 import { Outlet, redirect } from "react-router";
 import api from "../api/api";
 import NavBar from "../components/NavBar";
-import { ACCESS_TOKEN } from "../util/constant";
-import { getDataToSession } from "../util/storageFunc";
+import { ACCESS_TOKEN, USER_ID } from "../util/constant";
+import { getDataToSession, setDataToSession } from "../util/storageFunc";
 
-const AuthPrivateRouter = () => {
+const PrivateRouterLayout = () => {
   return (
     <>
       <NavBar />
@@ -23,10 +23,12 @@ export const privateLoader = async () => {
   try {
     api.auth.updateToken(accesToken);
     const data = await api.auth.getUserInfo();
+    setDataToSession(USER_ID, data.data.id);
     return null;
   } catch (error) {
+    api.auth.logout();
     return redirect("/login");
   }
 };
 
-export default AuthPrivateRouter;
+export default PrivateRouterLayout;

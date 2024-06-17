@@ -4,3 +4,4 @@ export const QUERY_POSTS = "posts";
 
 // storage
 export const ACCESS_TOKEN = "accessToken";
+export const USER_ID = "userId";

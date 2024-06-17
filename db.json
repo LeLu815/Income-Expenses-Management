@@ -1,18 +1,12 @@
 {
   "todos": [
     {
-      "id": "1774",
-      "date": "2024-06-01",
-      "category": "컬러 테스트 11",
-      "price": "30000",
-      "description": "멋쟁이사자 해커톤 프로젝트 \"모여\" 카카오톡 친구 공유 템플릿"
-    },
-    {
       "id": "bde1",
       "date": "2024-06-01",
       "category": "컬러 테스트 2",
       "price": "25000",
-      "description": "컬러 테스트 2"
+      "description": "유저 아이디와 일치 비교 수정함",
+      "userId": "leein9404"
     },
     {
       "id": "bde8",
@@ -48,6 +42,22 @@
       "category": "이인천재",
       "price": "36000",
       "description": "스파르타코딩클럽 심화 개인 과제!"
+    },
+    {
+      "id": "b8b0",
+      "userId": "leein9404",
+      "date": "2024-06-01",
+      "category": "추가 쿼리키",
+      "price": "25000",
+      "description": "삭제 쿼리키"
+    },
+    {
+      "id": "7f1e",
+      "userId": "leein9404",
+      "date": "2024-06-01",
+      "category": "삭제 테스트",
+      "price": "26000",
+      "description": "삭제 테스투투퉅!"
     }
   ]
 }
