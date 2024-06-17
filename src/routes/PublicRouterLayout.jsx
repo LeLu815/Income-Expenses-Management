@@ -3,7 +3,7 @@ import api from "../api/api";
 import { ACCESS_TOKEN } from "../util/constant";
 import { getDataToSession } from "../util/storageFunc";
 
-function PublicRouter() {
+function PublicRouterLayout() {
   return <Outlet />;
 }
 export const publicLoader = async () => {
@@ -25,4 +25,4 @@ export const publicLoader = async () => {
   return null;
 };
 
-export default PublicRouter;
+export default PublicRouterLayout;

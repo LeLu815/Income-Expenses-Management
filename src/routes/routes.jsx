@@ -8,15 +8,15 @@ import Detail, { loader as detailLoader } from "../pages/Detail";
 import Home from "../pages/Home";
 import NotFount from "../pages/NotFount";
 import PatchUserData from "../pages/User/PatchUserData.jsx/PatchUserData";
-import AuthPrivateRouter, { privateLoader } from "./AuthPrivateRouter";
-import PublicRouter, { publicLoader } from "./PublicRouter";
+import PrivateRouterLayout, { privateLoader } from "./PrivateRouterLayout";
+import PublicRouterLayout, { publicLoader } from "./PublicRouterLayout";
 
 const router = createBrowserRouter([
   {
     element: <DefaultLayout />,
     children: [
       {
-        element: <PublicRouter />,
+        element: <PublicRouterLayout />,
         loader: publicLoader,
         children: [
           { path: "/login", element: <LoginPage /> },
@@ -24,7 +24,7 @@ const router = createBrowserRouter([
         ],
       },
       {
-        element: <AuthPrivateRouter />,
+        element: <PrivateRouterLayout />,
         loader: privateLoader,
         children: [
           { path: "/", element: <Home /> },

@@ -4,7 +4,7 @@ import NavBar from "../components/NavBar";
 import { ACCESS_TOKEN } from "../util/constant";
 import { getDataToSession } from "../util/storageFunc";
 
-const AuthPrivateRouter = () => {
+const PrivateRouterLayout = () => {
   return (
     <>
       <NavBar />
@@ -29,4 +29,4 @@ export const privateLoader = async () => {
   }
 };
 
-export default AuthPrivateRouter;
+export default PrivateRouterLayout;
