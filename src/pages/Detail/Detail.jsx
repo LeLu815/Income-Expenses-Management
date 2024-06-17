@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { redirect, useNavigate, useParams } from "react-router";
 import styled from "styled-components";
 
@@ -40,7 +40,6 @@ function Detail() {
   const { openToast } = useCustomToast();
   const params = useParams();
   const paramsId = params[POST_ID];
-  const [currentPost, setCurrentPost] = useState(initialValue);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const {
@@ -51,12 +50,12 @@ function Detail() {
   } = useCustomModal();
 
   const {
-    data,
+    data: currentPost,
     isLoading: postsLoading,
     isError: postsError,
   } = useQuery({
-    queryKey: [QUERY_POSTS],
-    queryFn: () => todosApi.todos.getTodos(),
+    queryKey: [QUERY_POSTS, { id: paramsId }],
+    queryFn: () => todosApi.todos.getTodo(paramsId),
   });
 
   const { isLoading: postsPatchLoading, mutate: pathMutate } = useMutation({
@@ -66,7 +65,7 @@ function Detail() {
         type: TOAST_TYPE_SUCCESS,
         title: "업데이트 되었습니다. 감사합니다 :)",
       });
-      queryClient.invalidateQueries([QUERY_POSTS]);
+      queryClient.invalidateQueries([QUERY_POSTS, { id: paramsId }]);
     },
     onError: () => {
       openToast({
@@ -119,19 +118,6 @@ function Detail() {
   }, [confrimModal]);
 
   useEffect(() => {
-    if (data) {
-      const currentPost = data.data.find((post) => post.id === paramsId);
-      if (!currentPost) {
-        openModal({
-          title: "삭제된 기록",
-          description: "삭제된 기록입니다. :(",
-        });
-        return navigate("/");
-      }
-      setCurrentPost(currentPost);
-    }
-  }, [data]);
-  useEffect(() => {
     if (postsError) {
       openModal({
         title: "삭제된 기록",
@@ -161,7 +147,7 @@ function Detail() {
               name={FORM_DATE}
               id={FORM_DATE}
               min="2022-01-01"
-              defaultValue={currentPost[FORM_DATE]}
+              defaultValue={currentPost && currentPost[FORM_DATE]}
               required
             />
             <span className="absolute top-11 -left-20 text-rose-500 w-[600px] text-center">
@@ -181,7 +167,7 @@ function Detail() {
               type="text"
               name={FORM_CATEGORY}
               id={FORM_CATEGORY}
-              defaultValue={currentPost[FORM_CATEGORY]}
+              defaultValue={currentPost && currentPost[FORM_CATEGORY]}
               required
             />
             <span className="absolute top-11 -left-20 text-rose-500 w-[600px] text-center">
@@ -201,7 +187,7 @@ function Detail() {
               type="number"
               name={FORM_PRICE}
               id={FORM_PRICE}
-              defaultValue={currentPost[FORM_PRICE]}
+              defaultValue={currentPost && currentPost[FORM_PRICE]}
               required
             />
             <span className="absolute top-11 -left-20 text-rose-500 w-[600px] text-center">
@@ -221,7 +207,7 @@ function Detail() {
               type="text"
               name={FORM_DESCRIPTION}
               id={FORM_DESCRIPTION}
-              defaultValue={currentPost[FORM_DESCRIPTION]}
+              defaultValue={currentPost && currentPost[FORM_DESCRIPTION]}
               required
             />
             <span className="absolute top-11 -left-20 text-rose-500 w-[600px] text-center">
@@ -230,7 +216,12 @@ function Detail() {
           </div>
 
           <div className="flex gap-3 justify-between items-center">
-            <Button className="w-[100px]" variant="contained" type="submit">
+            <Button
+              className="w-[100px]"
+              variant="contained"
+              type="submit"
+              disabled={postsPatchLoading}
+            >
               저장
             </Button>
             <Button
@@ -239,6 +230,7 @@ function Detail() {
               variant="outlined"
               type="button"
               onClick={handleDelete}
+              disabled={postsDeleteLoading}
             >
               삭제
             </Button>

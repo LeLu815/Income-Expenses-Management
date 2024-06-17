@@ -7,6 +7,11 @@ class TodosApi {
     const response = await this.#client.get();
     return response;
   }
+  async getTodo(postId) {
+    const response = await this.#client.get();
+    const currentPost = response.data.find((post) => post.id === postId);
+    return currentPost;
+  }
   async postTodos(todo) {
     const response = await this.#client.post("", todo);
     return response;
