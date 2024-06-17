@@ -1,8 +1,27 @@
-# React + Vite
+## 투두리스트
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+#### 1. 한 것
 
-Currently, two official plugins are available:
+- [ x ] 내 프로필 페이지 디자인
+- [ x ] 총 지출 부분 돈 단위 수정
+- [ x ] 랜덤 컬러 적용하여 색상의 부족문제 해결 (randomcolor)
+- [ x ] 에러 메세지 팝업 디자인 적용, confirm 기능 대체함
+- [ x ] 디테일 페이지 스타일 업데이트 (mui/material, tailwindcss)
+- [ x ] 잘못된 url 입력시 nofound 페이지로 이동
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+#### 2 .못한 것
+
+- [ ] 주스텐드 적용
+- [ ] 카테고리별 적용
+- [ ] 배포
+
+## 튜터님 피드백
+
+1. loader에서 인가처리를 해주고 있기 때문에 PublicRouter 와 AuthPrivateRouter 는 단순히 레이아웃 역할만 하고 있습니다. 컴포넌트 명칭에서 혼란스럽지않게 PublicRouterLayout 이나 PrivateRouterLayout 처럼 실제 기능적인 사용목적에 따라 명칭을 변경해주시는 것
+2. 프로필 변경 시 사용자가 닉네임이나 프로필이미지 중 하나만 변경하고 싶을 수 있습니다. 현재는 둘다 변경을 해야만 동작하도록 되어 있는데, 이부분 개선
+3. 상세화면에서는 홈화면에서 캐싱해놨던 데이터를 그대로 꺼내 쓰기보다는 별도로 상세데이터 id에 맞는 데이터를 새롭게 가져와서 화면에 나타낼 때 사용하는 상태 지정을 위해 [QUERY_POSTS, id] 형식으로 나타내 주시는 것을 권장
+4. Detail.jsx에서 useQuery와 에러 처리 부분의 비즈니스 로직은 함수컴포넌트 내에서 코드 길이도 상당히 길고 복잡해보이기 때문에 별도의 커스텀훅으로 빼서 정리
+5. 그인한 유저의 id와 게시물의 userId를 비교해서 인가처리 해주는 로직
+6. 서비스 내에서 json-server와 CRUD 할 때 마다 accessToken으로 인증서버로부터의 인가처리가 필요
+7. 토큰이 만료되었다면 로그아웃처리
+8. NotFount 컴포넌트 이름 오타
