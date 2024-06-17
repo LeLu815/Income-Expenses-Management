@@ -6,7 +6,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { useNavigate, useParams } from "react-router";
 
-function NotFount() {
+function NotFound() {
   const navigate = useNavigate();
   const params = useParams();
   const urlPath = params["*"];
@@ -41,4 +41,4 @@ function NotFount() {
   );
 }
 
-export default NotFount;
+export default NotFound;
