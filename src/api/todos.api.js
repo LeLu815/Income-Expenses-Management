@@ -18,7 +18,7 @@ class TodosApi {
     return response;
   }
   async patchTodos({ id, newTodo, userId }) {
-    const todo = await this.getTodo(userId);
+    const todo = await this.getTodo(id);
     if (todo[USER_ID] === userId) {
       const response = await this.#client.patch(`/${id}`, newTodo);
       return response;
@@ -27,7 +27,7 @@ class TodosApi {
     }
   }
   async deleteTodos({ id, userId }) {
-    const todo = await this.getTodo(userId);
+    const todo = await this.getTodo(id);
     if (todo[USER_ID] === userId) {
       const response = await this.#client.delete(`/${id}`);
       return response;

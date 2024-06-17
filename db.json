@@ -42,6 +42,22 @@
       "category": "이인천재",
       "price": "36000",
       "description": "스파르타코딩클럽 심화 개인 과제!"
+    },
+    {
+      "id": "b8b0",
+      "userId": "leein9404",
+      "date": "2024-06-01",
+      "category": "추가 쿼리키",
+      "price": "25000",
+      "description": "삭제 쿼리키"
+    },
+    {
+      "id": "7f1e",
+      "userId": "leein9404",
+      "date": "2024-06-01",
+      "category": "삭제 테스트",
+      "price": "26000",
+      "description": "삭제 테스투투퉅!"
     }
   ]
 }

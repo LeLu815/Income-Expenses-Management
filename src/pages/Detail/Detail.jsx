@@ -78,8 +78,8 @@ function Detail() {
         type: TOAST_TYPE_SUCCESS,
         title: "삭제 되었습니다. 감사합니다 :)",
       });
-      queryClient.invalidateQueries([QUERY_POSTS]);
-      return navigate("/");
+      queryClient.invalidateQueries([QUERY_POSTS, { id: paramsId }]);
+      navigate("/");
     },
     onError: () => {
       openToast({
@@ -93,6 +93,7 @@ function Detail() {
     pathMutate({
       id: paramsId,
       newTodo: changedPost,
+      [USER_ID]: getDataToSession(USER_ID),
     });
   };
   const { handleSubmit, formRef, message } = useFormCustom({
@@ -109,7 +110,7 @@ function Detail() {
   };
   useEffect(() => {
     if (confrimModal) {
-      deleteMutate({ id: paramsId, USER_ID: getDataToSession(USER_ID) });
+      deleteMutate({ id: paramsId, [USER_ID]: getDataToSession(USER_ID) });
     }
     setConfirm(false);
   }, [confrimModal]);
