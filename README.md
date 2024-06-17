@@ -2,12 +2,12 @@
 
 #### 1. 한 것
 
-- [ x ] 내 프로필 페이지 디자인
-- [ x ] 총 지출 부분 돈 단위 수정
-- [ x ] 랜덤 컬러 적용하여 색상의 부족문제 해결 (randomcolor)
-- [ x ] 에러 메세지 팝업 디자인 적용, confirm 기능 대체함
-- [ x ] 디테일 페이지 스타일 업데이트 (mui/material, tailwindcss)
-- [ x ] 잘못된 url 입력시 nofound 페이지로 이동
+- [x] 내 프로필 페이지 디자인
+- [x] 총 지출 부분 돈 단위 수정
+- [x] 랜덤 컬러 적용하여 색상의 부족문제 해결 (randomcolor)
+- [x] 에러 메세지 팝업 디자인 적용, confirm 기능 대체함
+- [x] 디테일 페이지 스타일 업데이트 (mui/material, tailwindcss)
+- [x] 잘못된 url 입력시 nofound 페이지로 이동
 
 #### 2 .못한 것
 
