@@ -1,3 +1,5 @@
+import { USER_ID } from "../util/constant";
+
 class TodosApi {
   #client;
   constructor(client) {
@@ -8,21 +10,30 @@ class TodosApi {
     return response;
   }
   async getTodo(postId) {
-    const response = await this.#client.get();
-    const currentPost = response.data.find((post) => post.id === postId);
-    return currentPost;
+    const response = await this.#client.get("", { params: { id: postId } });
+    return response.data[0];
   }
   async postTodos(todo) {
     const response = await this.#client.post("", todo);
     return response;
   }
-  async patchTodos({ id, newTodo }) {
-    const response = await this.#client.patch(`/${id}`, newTodo);
-    return response;
+  async patchTodos({ id, newTodo, userId }) {
+    const todo = await this.getTodo(userId);
+    if (todo[USER_ID] === userId) {
+      const response = await this.#client.patch(`/${id}`, newTodo);
+      return response;
+    } else {
+      throw new Error("작성자의 아이디와 일치하지 않습니다.");
+    }
   }
-  async deleteTodos(id) {
-    const response = await this.#client.delete(`/${id}`);
-    return response;
+  async deleteTodos({ id, userId }) {
+    const todo = await this.getTodo(userId);
+    if (todo[USER_ID] === userId) {
+      const response = await this.#client.delete(`/${id}`);
+      return response;
+    } else {
+      throw new Error("작성자의 아이디와 일치하지 않습니다.");
+    }
   }
 }
 

@@ -1,18 +1,12 @@
 {
   "todos": [
     {
-      "id": "1774",
-      "date": "2024-06-01",
-      "category": "컬러 테스트 11",
-      "price": "30000",
-      "description": "멋쟁이사자 해커톤 프로젝트 \"모여\" 카카오톡 친구 공유 템플릿"
-    },
-    {
       "id": "bde1",
       "date": "2024-06-01",
       "category": "컬러 테스트 2",
       "price": "25000",
-      "description": "컬러 테스트 2"
+      "description": "유저 아이디와 일치 비교 수정함",
+      "userId": "leein9404"
     },
     {
       "id": "bde8",

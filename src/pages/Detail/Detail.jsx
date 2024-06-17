@@ -5,6 +5,7 @@ import { redirect, useNavigate, useParams } from "react-router";
 import styled from "styled-components";
 
 import { todosApi } from "../../api/api";
+import Loading from "../../components/Loading";
 import {
   FORM_CATEGORY,
   FORM_DATE,
@@ -21,8 +22,9 @@ import {
 import useFormCustom from "../../hooks/useFormCustom";
 import { StCardStyleDiv } from "../../styles/cardLayout";
 import { StForm } from "../../styles/formLayout";
-import { QUERY_POSTS } from "../../util/constant";
+import { QUERY_POSTS, USER_ID } from "../../util/constant";
 import { postSchema } from "../../util/postSchema";
+import { getDataToSession } from "../../util/storageFunc";
 
 const resolver = (formData) => {
   const { success, error } = postSchema.safeParse(formData);
@@ -42,12 +44,7 @@ function Detail() {
   const paramsId = params[POST_ID];
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const {
-    openModal,
-    closeModal,
-    confirm: confrimModal,
-    setConfirm,
-  } = useCustomModal();
+  const { openModal, confirm: confrimModal, setConfirm } = useCustomModal();
 
   const {
     data: currentPost,
@@ -112,13 +109,14 @@ function Detail() {
   };
   useEffect(() => {
     if (confrimModal) {
-      deleteMutate(paramsId);
+      deleteMutate({ id: paramsId, USER_ID: getDataToSession(USER_ID) });
     }
     setConfirm(false);
   }, [confrimModal]);
 
   useEffect(() => {
     if (postsError) {
+      console.log(postsError);
       openModal({
         title: "삭제된 기록",
         description: "삭제된 기록입니다. :(",
@@ -130,6 +128,16 @@ function Detail() {
   return (
     <StCardStyleDiv>
       <StFormHome $isInHome={false} ref={formRef} onSubmit={handleSubmit}>
+        <input
+          onChange={() => {
+            return getDataToSession(USER_ID);
+          }}
+          value={getDataToSession(USER_ID)}
+          className="hidden"
+          type="text"
+          name={USER_ID}
+          id={USER_ID}
+        />
         <h1 className="font-semibold text-2xl text-gray-500 mb-10">
           지출 기록 수정
         </h1>
@@ -248,6 +256,7 @@ function Detail() {
           </div>
         </div>
       </StFormHome>
+      {postsLoading && <Loading />}
     </StCardStyleDiv>
   );
 }
