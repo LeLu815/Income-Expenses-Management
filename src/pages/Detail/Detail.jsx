@@ -117,7 +117,6 @@ function Detail() {
 
   useEffect(() => {
     if (postsError) {
-      console.log(postsError);
       openModal({
         title: "삭제된 기록",
         description: "삭제된 기록입니다. :(",
